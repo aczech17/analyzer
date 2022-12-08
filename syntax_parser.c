@@ -1,5 +1,6 @@
 #include "syntax_parser.h"
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h> // exit - ale exit trzeba kiedyś usunąć i nie będzie to potrzebne
 #include "alex.h"       // analizator leksykalny
 #include "fun_stack.h"  // stos funkcji
@@ -26,6 +27,7 @@ void close_parser()
 void parse_file_syntax(char* inpname) // przetwarza plik inpname
 {
     FILE* in = fopen(inpname, "r");
+
 
     if (in == NULL)
     {
@@ -88,7 +90,9 @@ void parse_file_syntax(char* inpname) // przetwarza plik inpname
                               store_add_proto(get_from_fun_stack(), alex_getLN(), inpname);
           				else                  // nast. leksem to nie { i jesteśmy wewnątrz bloku - to zapewne wywołanie
                         {
-                              store_add_call(get_from_fun_stack(), alex_getLN(), inpname);
+							char *mother = malloc(strlen( get_top_fun_name(&fun_defs) + 1 ) );
+							strcpy(mother,  get_top_fun_name(&fun_defs) );
+                            store_add_call(get_from_fun_stack(), alex_getLN(), inpname, mother );
                         }
         			}
         			npar--;
@@ -121,3 +125,4 @@ void parse_file_syntax(char* inpname) // przetwarza plik inpname
 
     fclose(in);
 }
+

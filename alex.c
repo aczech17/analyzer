@@ -7,6 +7,29 @@ static int  ln;
 static char ident[256];
 static FILE* ci = NULL;
 
+int isalpha_or_floor( char c )
+{
+    if ( isalpha(c) )
+        return 1;
+
+    if ( c == '_')
+        return 1;
+
+    return 0;
+}
+
+int isalnum_or_floor( char c )
+{
+    if ( isalnum(c) )
+        return 1;
+
+    if ( c == '_')
+        return 1;
+
+    return 0;
+}
+
+
 int isKeyword(const char string[256])
 {
 	const char* keywords[] = {
@@ -81,12 +104,12 @@ lexem_t alex_nextLexem()
               return OPEBRA;
           else if(c == '}')
               return CLOBRA;
-          else if(isalpha(c))
+          else if( (isalpha_or_floor(c)) ) // Zakładamy, że nazwa funkcji może się składać tylko z liter i znaków "_"
           {
               ident[0] = (char)c;
               int i = 1;
 
-              while(isalnum(c = fgetc(ci)))
+              while( ( isalnum_or_floor(c = fgetc(ci)) ) )
                   ident[i++] = (char) c;
 
               ident[i] = '\0';

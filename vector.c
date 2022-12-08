@@ -21,9 +21,12 @@ void init_vector(Vector* v)
     v->line_numbers = malloc(v->capacity * sizeof(*v->line_numbers));
     v->fun_names = calloc(v->capacity, sizeof(*v->fun_names));
     v->file_names = calloc(v->capacity, sizeof(*v->file_names));
+    v->mother_fun = calloc(v->capacity, sizeof(*v->mother_fun));
 }
 
-void add_triple(Vector* v, int line_number, char* fun_name, char* file_name)
+
+
+void add_triple(Vector* v, int line_number, char* fun_name, char* file_name, char* mother_fun)
 {
     if (v->size == v->capacity)
     {
@@ -33,11 +36,13 @@ void add_triple(Vector* v, int line_number, char* fun_name, char* file_name)
 
         v->fun_names = realloc(v->fun_names, v->capacity * sizeof(*v->fun_names));
         v->file_names = realloc(v->file_names, v->capacity * sizeof(*v->file_names));
+        v->mother_fun = realloc(v->mother_fun, v->capacity * sizeof(*v->mother_fun));
 
         int i;
         for (i = v->size; i < v->capacity; i++)
         {
             v->file_names[i] = v->fun_names[i] = NULL;
+            v->mother_fun[i] = v->mother_fun[i] = NULL;
         }
     }
 
@@ -48,6 +53,9 @@ void add_triple(Vector* v, int line_number, char* fun_name, char* file_name)
 
     v->file_names[v->size] = malloc((strlen(file_name) + 1) * sizeof(char));
     strcpy(v->file_names[v->size], file_name);
+
+    v->mother_fun[v->size] = malloc((strlen(mother_fun) + 1) * sizeof(char));
+    strcpy(v->mother_fun[v->size], mother_fun);
 
     v->size++;
 }
@@ -62,9 +70,21 @@ char* get_fun_name(Vector* v, int index)
     return v->fun_names[index];
 }
 
+char* get_top_fun_name(Vector *v)
+{
+    if( v->size == 0 )
+        return NULL;
+    return v->fun_names[v->size - 1];
+}
+
 char* get_file_name(Vector* v, int index)
 {
     return v->file_names[index];
+}
+
+char* get_mother_fun(Vector* v, int index)
+{
+    return v->mother_fun[index];
 }
 
 void delete_vector(Vector* v)
@@ -74,11 +94,12 @@ void delete_vector(Vector* v)
     {
         free(v->fun_names[i]);
         free(v->file_names[i]);
+        free(v->mother_fun[i]);
     }
 
     free(v->fun_names);
     free(v->file_names);
-
+    free(v->mother_fun);
     free(v->line_numbers);
 }
 
