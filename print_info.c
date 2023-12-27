@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int print_called_by(char* mothername)
+static int print_called_by(char* mothername)
 {
     int is_calling = 0;
 
@@ -38,7 +38,7 @@ int print_called_by(char* mothername)
 }
 
 
-void print_fun_info(char* funame)
+static void print_fun_info(char* funame)
 {
     int counter;
 
