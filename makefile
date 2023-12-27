@@ -1,6 +1,5 @@
 analyzer: *.c
-  gcc -Wextra *.c -o analyzer
+	gcc -Wall -Wextra *.c -o analyzer
   
 clean:
-  rm -f *.o analyzer
-  
+	rm -f *.o analyzer
